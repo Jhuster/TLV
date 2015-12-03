@@ -11,18 +11,12 @@ Brief
 ----------
 
 One TLV Box is shown as follow:
- 
-   4Bytes     4Bytes     $Length Bytes
-+----------+----------+-----------------+
-|   Type   |  Length  |      Value      |
-+----------+----------+-----------------+
+
+![TLV](https://github.com/Jhuster/TLV/blob/master/1.png) 
 
 And serial TLV boxes can be connected as follow:
 
-   4Bytes     4Bytes     $Length Bytes     4Bytes     4Bytes     $Length Bytes
-+----------+----------+-----------------+----------+----------+-----------------+
-|   Type   |  Length  |      Value      |   Type   |  Length  |      Value      |
-+----------+----------+-----------------+----------+----------+-----------------+
+![TLV](https://github.com/Jhuster/TLV/blob/master/2.png)
 
 Contact
 ----------
