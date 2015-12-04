@@ -6,7 +6,7 @@ An easy-to-use TLV API in C plus plus
 Building
 ----------
 
-    g++ -o Test.cpp TlvObject.cpp 
+    g++ -o test Test.cpp TlvObject.cpp 
     ./test
 
 Usage
