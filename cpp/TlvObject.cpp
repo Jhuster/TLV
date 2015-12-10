@@ -62,20 +62,21 @@ bool TlvObject::Parse(const unsigned char *buffer,int buffersize)
         return false;
     }
 
-    mSerializedBuffer = new unsigned char[buffersize];
-    memcpy(mSerializedBuffer,buffer,buffersize);
+    unsigned char *cached = new unsigned char[buffersize];
+    memcpy(cached,buffer,buffersize);
 
     int offset = 0, length = 0;
     while(offset < buffersize) {
-        int type = ntohl((*(int *)(mSerializedBuffer+offset)));
+        int type = ntohl((*(int *)(cached+offset)));
         offset += sizeof(int);
-        int length = ntohl((*(int *)(mSerializedBuffer+offset)));
+        int length = ntohl((*(int *)(cached+offset)));
         offset += sizeof(int);
-        PutValue(type,mSerializedBuffer+offset,length);
+        PutValue(type,cached+offset,length);
         offset += length;
     }
 
-    mSerializedBytes = buffersize;
+    mSerializedBuffer = cached;
+    mSerializedBytes  = buffersize;
 
     return true;
 }
@@ -255,7 +256,7 @@ bool TlvObject::GetBytesValue(int type,unsigned char *value,int &length) const
 bool TlvObject::GetBytesValuePtr(int type,unsigned char **value,int &length) const
 {
     Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length) || length < obj.length) {
+    if(!GetValue(type,&obj.value,obj.length)) {
         return false;
     }
     *value = (unsigned char *)obj.value;
