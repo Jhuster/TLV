@@ -9,25 +9,27 @@
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; version 2 of the License.  
  */
+package com.jhuster.testcode;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.HashMap;
-import java.util.Set;
 
-public class TlvObject {
+import android.util.SparseArray;
 
+public class TlvBox {
+    
     private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
     
-    private HashMap<Integer,byte[]> mObjects;
+    private SparseArray<byte[]> mObjects;
     private int mTotalBytes = 0;
 
-    public TlvObject() {
-        mObjects = new HashMap<Integer,byte[]>();
+    public TlvBox() {
+        mObjects = new SparseArray<byte[]>();
     }
     
-    public static TlvObject parse(byte[] buffer,int offset,int length) {
+    public static TlvBox parse(byte[] buffer,int offset,int length) {
         
-        TlvObject object = new TlvObject();
+        TlvBox box = new TlvBox();
         
         int parsed = 0;
         while(parsed < length) {
@@ -37,17 +39,18 @@ public class TlvObject {
             parsed += 4;
             byte[] value = new byte[size];
             System.arraycopy(buffer, offset+parsed, value, 0, size);
-            object.putBytesValue(type,value);
+            box.putBytesValue(type,value);
             parsed += size;
         }        
-        return object;
+        
+        return box;
     }
     
     public byte[] serialize() {
         int offset = 0;
-        byte[] result = new byte[mTotalBytes];                
-        Set<Integer> keys = mObjects.keySet();        
-        for(Integer key : keys) {
+        byte[] result = new byte[mTotalBytes];  
+        for(int i=0; i<mObjects.size(); i++) {
+            int key = mObjects.keyAt(i);
             byte[] bytes = mObjects.get(key);
             byte[] type   = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putInt(key).array();
             byte[] length = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putInt(bytes.length).array();
@@ -96,7 +99,7 @@ public class TlvObject {
         putBytesValue(type,value.getBytes());        
     }
 
-    public void putObjectValue(int type,TlvObject value) {        
+    public void putObjectValue(int type,TlvBox value) {        
         putBytesValue(type,value.serialize());
     }
     
@@ -153,12 +156,12 @@ public class TlvObject {
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getDouble();
     }
     
-    public TlvObject getObjectValue(int type) {
+    public TlvBox getObjectValue(int type) {
         byte[] bytes = mObjects.get(type);
         if(bytes == null) {
             return null;
         }
-        return TlvObject.parse(bytes, 0, bytes.length);
+        return TlvBox.parse(bytes, 0, bytes.length);
     }
     
     public String getStringValue(int type) {

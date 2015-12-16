@@ -1,4 +1,4 @@
-TlvObject.java
+TlvBox.java
 ----------
 
 An easy-to-use TLV API in Java version
@@ -6,7 +6,7 @@ An easy-to-use TLV API in Java version
 Building
 ----------
 
-    $ javac Tester.java TlvObject.java 
+    $ javac Tester.java TlvBox.java 
     $ java Tester
 
 Usage
@@ -14,7 +14,7 @@ Usage
 
  **1. Public functions for encode**
 
-    //Put one TLV box
+    //put one TLV object
     public void putByteValue(int type,byte value);        
     public void putShortValue(int type,short value);    
     public void putIntValue(int type,int value);    
@@ -22,7 +22,7 @@ Usage
     public void putFloatValue(int type,float value);    
     public void putDoubleValue(int type,double value);    
     public void putStringValue(int type,String value);
-    public void putObjectValue(int type,TlvObject value);    
+    public void putObjectValue(int type,TlvBox value);    
     public void putBytesValue(int type,byte[] value);    
 
     //do encode
@@ -31,9 +31,9 @@ Usage
  **2. Public functions for decode**
  
     //do decode
-    public static TlvObject parse(byte[] buffer,int offset,int length);
+    public static TlvBox parse(byte[] buffer,int offset,int length);
     
-    //Get one TLV box
+    //get one TLV object
     public Byte getByteValue(int type);        
     public Short getShortValue(int type);    
     public Integer getIntValue(int type);    
@@ -41,7 +41,7 @@ Usage
     public Float getFloatValue(int type);    
     public Double getDoubleValue(int type);        
     public String getStringValue(int type);
-    public TlvObject getObjectValue(int type); 
+    public TlvBox getObjectValue(int type); 
     public byte[] getBytesValue(int type) ;
 
  **3. Sample code**

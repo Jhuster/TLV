@@ -26,7 +26,7 @@ Usage
     bool PutDoubleValue(int type,const double &value);
     bool PutStringValue(int type,const char *value);
     bool PutBytesValue(int type,const unsigned char *value,int length);
-    bool PutObjectValue(int type,const TlvObject& value);
+    bool PutObjectValue(int type,const TlvBox& value);
     bool PutValue(int type,const void *value,int length);     
     
     //do encode
@@ -52,7 +52,7 @@ Usage
     bool GetStringValue(int type,char *value,int &length) const;
     bool GetBytesValue(int type,unsigned char *value,int &length) const;
     bool GetBytesValuePtr(int type,unsigned char **value,int &length) const;
-    bool GetObjectValue(int type,TlvObject& value) const;
+    bool GetObjectValue(int type,TlvBox& value) const;
     bool GetValue(int type,const void **value,int& length) const;
 
  **3. Sample code**

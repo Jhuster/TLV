@@ -23,23 +23,23 @@ public class Tester {
     
     public static void main(String args[]) {
         
-        TlvObject object = new TlvObject();
-        object.putByteValue(TEST_TYPE_1, (byte)1);
-        object.putShortValue(TEST_TYPE_2,(short)2);
-        object.putIntValue(TEST_TYPE_3,(int)3);
-        object.putLongValue(TEST_TYPE_4,(long)4);
-        object.putFloatValue(TEST_TYPE_5,(float)5.67);
-        object.putDoubleValue(TEST_TYPE_6,(double)8.91);
-        object.putStringValue(TEST_TYPE_7, "hello world !");
-        object.putBytesValue(TEST_TYPE_8,new byte[] {1,2,3,4,5,6} );
+        TlvBox box = new TlvBox();
+        box.putByteValue(TEST_TYPE_1, (byte)1);
+        box.putShortValue(TEST_TYPE_2,(short)2);
+        box.putIntValue(TEST_TYPE_3,(int)3);
+        box.putLongValue(TEST_TYPE_4,(long)4);
+        box.putFloatValue(TEST_TYPE_5,(float)5.67);
+        box.putDoubleValue(TEST_TYPE_6,(double)8.91);
+        box.putStringValue(TEST_TYPE_7, "hello world !");
+        box.putBytesValue(TEST_TYPE_8,new byte[] {1,2,3,4,5,6} );
         
-        TlvObject box = new TlvObject();
-        box.putObjectValue(TEST_TYPE_9, object);
+        TlvBox boxes = new TlvBox();
+        boxes.putObjectValue(TEST_TYPE_9, box);
         
-        byte[] serialized = box.serialize();
+        byte[] serialized = boxes.serialize();
         
-        TlvObject parsedBox = TlvObject.parse(serialized, 0, serialized.length);
-        TlvObject parsedObject = parsedBox.getObjectValue(TEST_TYPE_9);
+        TlvBox parsedBox = TlvBox.parse(serialized, 0, serialized.length);
+        TlvBox parsedObject = parsedBox.getObjectValue(TEST_TYPE_9);
         
         System.out.println("TEST_TYPE_1: " + parsedObject.getByteValue(TEST_TYPE_1));
         System.out.println("TEST_TYPE_2: " + parsedObject.getShortValue(TEST_TYPE_2));        

@@ -19,7 +19,7 @@ Usage
 
  **2. Public functions for encode**
 
-    //Put one TLV box
+    //put one TLV object
     int tlv_put_char(tlv_t *tlv,int type,char *value);
     int tlv_put_short(tlv_t *tlv,int type,short *value);
     int tlv_put_int(tlv_t *tlv,int type,int *value);
@@ -43,7 +43,7 @@ Usage
     //do decode
     tlv_t *tlv_parse(unsigned char *buffer,int buffersize);
     
-    //Get one TLV box
+    //get one TLV object
     int tlv_get_char(tlv_t *tlv,int type,char *value);
     int tlv_get_short(tlv_t *tlv,int type,short *value);
     int tlv_get_int(tlv_t *tlv,int type,int *value);
