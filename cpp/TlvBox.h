@@ -10,33 +10,26 @@
  *  the Free Software Foundation; version 2 of the License.  
  */
 
-#ifndef _TLVOBJECT_H_
-#define _TLVOBJECT_H_
+#ifndef _TLV_BOX_H_
+#define _TLV_BOX_H_
 
 #include <map>
 
 namespace TLV
 {
 
-class TlvObject
+class TlvBox
 {
 public:
-    TlvObject();
-    virtual ~TlvObject();
+    TlvBox();
+    virtual ~TlvBox();
 
 private:
-    TlvObject(const TlvObject& c);
-    TlvObject &operator=(const TlvObject &c);
+    TlvBox(const TlvBox& c);
+    TlvBox &operator=(const TlvBox &c);
 
 public:
-    bool Serialize();
-    bool Parse(const unsigned char *buffer,int buffersize);
-
-public:
-    unsigned char * GetSerializedBuffer() const;
-    int GetSerializedBytes() const;
-
-public:
+    //put one TLV object
     bool PutCharValue(int type,const char &value);
     bool PutShortValue(int type,const short &value);
     bool PutIntValue(int type,const int &value);
@@ -46,10 +39,21 @@ public:
     bool PutDoubleValue(int type,const double &value);
     bool PutStringValue(int type,const char *value);
     bool PutBytesValue(int type,const unsigned char *value,int length);
-    bool PutObjectValue(int type,const TlvObject& value);
-    bool PutValue(int type,const void *value,int length);    
+    bool PutObjectValue(int type,const TlvBox& value);
+    bool PutValue(int type,const void *value,int length);  
+
+    //do encode
+    bool Serialize(); 
+
+    //access encoded buffer and length
+    unsigned char * GetSerializedBuffer() const;
+    int GetSerializedBytes() const;
 
 public:    
+    //do decode
+    bool Parse(const unsigned char *buffer,int buffersize); 
+
+    //get one TLV object
     bool GetCharValue(int type,char &value) const;
     bool GetShortValue(int type,short &value) const;
     bool GetIntValue(int type,int &value) const;
@@ -60,7 +64,7 @@ public:
     bool GetStringValue(int type,char *value,int &length) const;
     bool GetBytesValue(int type,unsigned char *value,int &length) const;
     bool GetBytesValuePtr(int type,unsigned char **value,int &length) const;
-    bool GetObjectValue(int type,TlvObject& value) const;
+    bool GetObjectValue(int type,TlvBox& value) const;
     bool GetValue(int type,const void **value,int& length) const;
 
 private:

@@ -12,11 +12,11 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "TlvObject.h"
+#include "TlvBox.h"
 
 using namespace TLV;
 
-#define TLV_TYPE_OBJECTS   0xff
+#define TLV_TYPE_OBJECT    0xff
 
 #define TLV_TYPE_USERNAME  0x01
 #define TLV_TYPE_PASSWORD  0x02
@@ -58,22 +58,22 @@ static bool test_write_tlv()
     student.sno = 1234567890;
     student.score = 98.55;
 
-    TlvObject object;
-    object.PutCharValue(TLV_TYPE_SEX,student.sex);
-    object.PutStringValue(TLV_TYPE_USERNAME,student.username);
-    object.PutIntValue(TLV_TYPE_AGE,student.age);
-    object.PutLongLongValue(TLV_TYPE_SNO,student.sno);
-    object.PutFloatValue(TLV_TYPE_SCORE,student.score);
-    if(!object.Serialize()) {
-        LOG("failed to do Serialize object !\n");
+    TlvBox box;
+    box.PutCharValue(TLV_TYPE_SEX,student.sex);
+    box.PutStringValue(TLV_TYPE_USERNAME,student.username);
+    box.PutIntValue(TLV_TYPE_AGE,student.age);
+    box.PutLongLongValue(TLV_TYPE_SNO,student.sno);
+    box.PutFloatValue(TLV_TYPE_SCORE,student.score);
+    if(!box.Serialize()) {
+        LOG("failed to do Serialize box !\n");
         fclose(wp);
         return false;
     }
 
-    TlvObject objects;
-    objects.PutObjectValue(TLV_TYPE_OBJECTS,object);
-    if(!objects.Serialize()) {
-        LOG("failed to do Serialize objects !\n");
+    TlvBox boxes;
+    boxes.PutObjectValue(TLV_TYPE_OBJECT,box);
+    if(!boxes.Serialize()) {
+        LOG("failed to do Serialize boxes !\n");
         fclose(wp);
         return false;
     }
@@ -83,7 +83,7 @@ static bool test_write_tlv()
     header.startcode[1] = 0x0B;
     header.startcode[2] = 0x0C;
     header.startcode[3] = 0x0D;
-    header.content_length = objects.GetSerializedBytes();
+    header.content_length = boxes.GetSerializedBytes();
 
     if(fwrite(&header,sizeof(header),1,wp) != 1) {
         LOG("failed to write FileHeader !\n");
@@ -91,8 +91,8 @@ static bool test_write_tlv()
         return false;
     }
 
-    if(fwrite(objects.GetSerializedBuffer(),objects.GetSerializedBytes(),1,wp) != 1) {
-        LOG("failed to write TlvObject !\n");
+    if(fwrite(boxes.GetSerializedBuffer(),boxes.GetSerializedBytes(),1,wp) != 1) {
+        LOG("failed to write TlvBox !\n");
         fclose(wp);
         return false;
     }
@@ -134,24 +134,24 @@ static bool test_read_tlv()
         return false;
     }
 
-    TlvObject objects;
-    if(!objects.Parse(buffer,header.content_length)) {
+    TlvBox boxes;
+    if(!boxes.Parse(buffer,header.content_length)) {
         LOG("failed to do Parse !\n");
         fclose(rp);
         return false;
     }
     delete[] buffer;
 
-    TlvObject object;
-    objects.GetObjectValue(TLV_TYPE_OBJECTS,object);
+    TlvBox box;
+    boxes.GetObjectValue(TLV_TYPE_OBJECT,box);
 
     Student student;
     int usernameLen = 20;
-    object.GetCharValue(TLV_TYPE_SEX,student.sex);
-    object.GetStringValue(TLV_TYPE_USERNAME,student.username,usernameLen);
-    object.GetIntValue(TLV_TYPE_AGE,student.age);
-    object.GetLongLongValue(TLV_TYPE_SNO,student.sno);
-    object.GetFloatValue(TLV_TYPE_SCORE,student.score);
+    box.GetCharValue(TLV_TYPE_SEX,student.sex);
+    box.GetStringValue(TLV_TYPE_USERNAME,student.username,usernameLen);
+    box.GetIntValue(TLV_TYPE_AGE,student.age);
+    box.GetLongLongValue(TLV_TYPE_SNO,student.sno);
+    box.GetFloatValue(TLV_TYPE_SCORE,student.score);
 
     LOG("Read student success, sex = %d, username = %s, age = %d, sno = %lld, score = %0.2f \n",
          student.sex,student.username,student.age,student.sno,student.score);

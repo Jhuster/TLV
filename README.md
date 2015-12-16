@@ -10,13 +10,17 @@ This project aims to provide some easy-to-use API for TLV encode and decode in C
 Brief
 ----------
 
-One TLV Box is shown as follow:
+One TLV Object is shown as follow:
 
 ![TLV](https://github.com/Jhuster/TLV/blob/master/1.png) 
 
-And serial TLV boxes can be connected as follow:
+Serial TLV Objects can be connected like this:
 
 ![TLV](https://github.com/Jhuster/TLV/blob/master/2.png)
+
+You can also put a TLV Object into another TLV Object, like this:
+
+![TLV](https://github.com/Jhuster/TLV/blob/master/3.png)
 
 Contact
 ----------

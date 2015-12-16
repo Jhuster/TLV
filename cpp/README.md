@@ -1,12 +1,14 @@
-TlvObject
+TlvBox
 ----------
 
-An easy-to-use TLV API in C plus plus
+An easy-to-use TLV API in C plus plus. 
+
+It can help you construct & parse one or several TLV objects.
 
 Building
 ----------
 
-    g++ -o test Test.cpp TlvObject.cpp 
+    g++ -o test Test.cpp TlvBox.cpp 
     ./test
 
 Usage
@@ -14,7 +16,7 @@ Usage
 
  **1. Public functions for encode**
 
-    //Put one TLV box
+    //put one TLV box
     bool PutCharValue(int type,const char &value);
     bool PutShortValue(int type,const short &value);
     bool PutIntValue(int type,const int &value);
@@ -39,7 +41,7 @@ Usage
     //do decode
     bool Parse(const unsigned char *buffer,int buffersize); 
     
-    //Get one TLV box
+    //get one TLV box
     bool GetCharValue(int type,char &value) const;
     bool GetShortValue(int type,short &value) const;
     bool GetIntValue(int type,int &value) const;

@@ -12,17 +12,17 @@
 
 #include <string.h>
 #include <arpa/inet.h>
-#include "TlvObject.h"
+#include "TlvBox.h"
 
 namespace TLV
 {
 
-TlvObject::TlvObject() : mSerializedBuffer(NULL),mSerializedBytes(0)
+TlvBox::TlvBox() : mSerializedBuffer(NULL),mSerializedBytes(0)
 {
 
 }
 
-TlvObject::~TlvObject()
+TlvBox::~TlvBox()
 {
     if(mSerializedBuffer != NULL) {
         delete[] mSerializedBuffer;
@@ -31,7 +31,7 @@ TlvObject::~TlvObject()
     mTlvMap.clear();
 }
 
-bool TlvObject::Serialize()
+bool TlvBox::Serialize()
 {
     if(mSerializedBuffer != NULL) {
         return false;
@@ -56,7 +56,7 @@ bool TlvObject::Serialize()
     return true;
 }
 
-bool TlvObject::Parse(const unsigned char *buffer,int buffersize)
+bool TlvBox::Parse(const unsigned char *buffer,int buffersize)
 {
     if(mSerializedBuffer != NULL) {
         return false;
@@ -65,7 +65,7 @@ bool TlvObject::Parse(const unsigned char *buffer,int buffersize)
     unsigned char *cached = new unsigned char[buffersize];
     memcpy(cached,buffer,buffersize);
 
-    int offset = 0, length = 0;
+    int offset = 0;
     while(offset < buffersize) {
         int type = ntohl((*(int *)(cached+offset)));
         offset += sizeof(int);
@@ -81,17 +81,17 @@ bool TlvObject::Parse(const unsigned char *buffer,int buffersize)
     return true;
 }
 
-unsigned char * TlvObject::GetSerializedBuffer() const
+unsigned char * TlvBox::GetSerializedBuffer() const
 {
     return mSerializedBuffer;
 }
 
-int TlvObject::GetSerializedBytes() const
+int TlvBox::GetSerializedBytes() const
 {
     return mSerializedBytes;
 }
 
-bool TlvObject::PutValue(int type,const void *value,int length)
+bool TlvBox::PutValue(int type,const void *value,int length)
 {
     if(mSerializedBuffer != NULL || value == NULL) {
         return false;
@@ -105,57 +105,57 @@ bool TlvObject::PutValue(int type,const void *value,int length)
     return true;
 }
 
-bool TlvObject::PutCharValue(int type,const char &value)
+bool TlvBox::PutCharValue(int type,const char &value)
 {
     return PutValue(type,&value,sizeof(char));
 }
 
-bool TlvObject::PutShortValue(int type,const short &value)
+bool TlvBox::PutShortValue(int type,const short &value)
 {
     return PutValue(type,&value,sizeof(short));
 }
 
-bool TlvObject::PutIntValue(int type,const int &value)
+bool TlvBox::PutIntValue(int type,const int &value)
 {
     return PutValue(type,&value,sizeof(int));
 }
 
-bool TlvObject::PutLongValue(int type,const long &value)
+bool TlvBox::PutLongValue(int type,const long &value)
 {
     return PutValue(type,&value,sizeof(long));
 }
 
-bool TlvObject::PutLongLongValue(int type,const long long &value)
+bool TlvBox::PutLongLongValue(int type,const long long &value)
 {
     return PutValue(type,&value,sizeof(long long));
 }
 
-bool TlvObject::PutFloatValue(int type,const float &value)
+bool TlvBox::PutFloatValue(int type,const float &value)
 {
     return PutValue(type,&value,sizeof(float));
 }
 
-bool TlvObject::PutDoubleValue(int type,const double &value)
+bool TlvBox::PutDoubleValue(int type,const double &value)
 {
     return PutValue(type,&value,sizeof(float));
 }
 
-bool TlvObject::PutStringValue(int type,const char *value)
+bool TlvBox::PutStringValue(int type,const char *value)
 {
     return PutValue(type,value,strlen(value)+1);
 }
 
-bool TlvObject::PutBytesValue(int type,const unsigned char *value,int length)
+bool TlvBox::PutBytesValue(int type,const unsigned char *value,int length)
 {
     return PutValue(type,value,length);
 }
 
-bool TlvObject::PutObjectValue(int type,const TlvObject& value)
+bool TlvBox::PutObjectValue(int type,const TlvBox& value)
 {
     return PutValue(type,value.GetSerializedBuffer(),value.GetSerializedBytes());   
 }
 
-bool TlvObject::GetValue(int type,const void **value,int& length) const
+bool TlvBox::GetValue(int type,const void **value,int& length) const
 {
     std::map<int,Tlv>::const_iterator itor = mTlvMap.find(type);
     if(itor == mTlvMap.end()) {
@@ -166,7 +166,7 @@ bool TlvObject::GetValue(int type,const void **value,int& length) const
     return true;
 }
 
-bool TlvObject::GetCharValue(int type,char &value) const
+bool TlvBox::GetCharValue(int type,char &value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -176,7 +176,7 @@ bool TlvObject::GetCharValue(int type,char &value) const
     return true;
 }
 
-bool TlvObject::GetShortValue(int type,short &value) const
+bool TlvBox::GetShortValue(int type,short &value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -186,7 +186,7 @@ bool TlvObject::GetShortValue(int type,short &value) const
     return true;
 }
 
-bool TlvObject::GetIntValue(int type,int &value) const
+bool TlvBox::GetIntValue(int type,int &value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -196,7 +196,7 @@ bool TlvObject::GetIntValue(int type,int &value) const
     return true;
 }
 
-bool TlvObject::GetLongValue(int type,long &value) const
+bool TlvBox::GetLongValue(int type,long &value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -206,7 +206,7 @@ bool TlvObject::GetLongValue(int type,long &value) const
     return true;
 }
 
-bool TlvObject::GetLongLongValue(int type,long long &value) const
+bool TlvBox::GetLongLongValue(int type,long long &value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -216,7 +216,7 @@ bool TlvObject::GetLongLongValue(int type,long long &value) const
     return true;
 }
 
-bool TlvObject::GetFloatValue(int type,float& value) const
+bool TlvBox::GetFloatValue(int type,float& value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -226,7 +226,7 @@ bool TlvObject::GetFloatValue(int type,float& value) const
     return true;
 }
 
-bool TlvObject::GetDoubleValue(int type,double& value) const
+bool TlvBox::GetDoubleValue(int type,double& value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -236,12 +236,12 @@ bool TlvObject::GetDoubleValue(int type,double& value) const
     return true;
 }
 
-bool TlvObject::GetStringValue(int type,char *value,int &length) const
+bool TlvBox::GetStringValue(int type,char *value,int &length) const
 {
     return GetBytesValue(type,(unsigned char *)value,length);
 }
 
-bool TlvObject::GetBytesValue(int type,unsigned char *value,int &length) const
+bool TlvBox::GetBytesValue(int type,unsigned char *value,int &length) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length) || length < obj.length) {
@@ -253,7 +253,7 @@ bool TlvObject::GetBytesValue(int type,unsigned char *value,int &length) const
     return true;
 }
 
-bool TlvObject::GetBytesValuePtr(int type,unsigned char **value,int &length) const
+bool TlvBox::GetBytesValuePtr(int type,unsigned char **value,int &length) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
@@ -264,7 +264,7 @@ bool TlvObject::GetBytesValuePtr(int type,unsigned char **value,int &length) con
     return true;
 }
 
-bool TlvObject::GetObjectValue(int type,TlvObject& value) const
+bool TlvBox::GetObjectValue(int type,TlvBox& value) const
 {
     Tlv obj;
     if(!GetValue(type,&obj.value,obj.length)) {
