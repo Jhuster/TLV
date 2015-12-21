@@ -14,7 +14,7 @@
 #include <arpa/inet.h>
 #include "TlvBox.h"
 
-namespace TLV
+namespace tlv
 {
 
 TlvBox::TlvBox() : mSerializedBuffer(NULL),mSerializedBytes(0)
@@ -145,6 +145,12 @@ bool TlvBox::PutStringValue(int type,const char *value)
     return PutValue(type,value,strlen(value)+1);
 }
 
+bool TlvBox::PutStringValue(int type,const std::string &value)
+{
+    int length = value.size()+1;
+    return PutValue(type,value.c_str(),length);
+}
+
 bool TlvBox::PutBytesValue(int type,const unsigned char *value,int length)
 {
     return PutValue(type,value,length);
@@ -239,6 +245,16 @@ bool TlvBox::GetDoubleValue(int type,double& value) const
 bool TlvBox::GetStringValue(int type,char *value,int &length) const
 {
     return GetBytesValue(type,(unsigned char *)value,length);
+}
+
+bool TlvBox::GetStringValue(int type,std::string &value) const
+{
+    Tlv obj;
+    if(!GetValue(type,&obj.value,obj.length)) {
+        return false;
+    }
+    value = (char *)obj.value;
+    return true;
 }
 
 bool TlvBox::GetBytesValue(int type,unsigned char *value,int &length) const

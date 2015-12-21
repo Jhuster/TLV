@@ -11,10 +11,10 @@
  */
 
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include "TlvBox.h"
 
-using namespace TLV;
+using namespace tlv;
 
 #define TLV_TYPE_OBJECT    0xff
 
@@ -35,7 +35,7 @@ typedef struct tagFileHeader
 
 typedef struct tagStudent
 {
-    char username[20];
+    std::string username;
     char sex;
     int  age;
     long long sno;
@@ -52,7 +52,7 @@ static bool test_write_tlv()
     }
 
     Student student;
-    strcpy(student.username,"jhuster");
+    student.username = "jhuster";
     student.sex = 1;
     student.age = 28;
     student.sno = 1234567890;
@@ -146,15 +146,14 @@ static bool test_read_tlv()
     boxes.GetObjectValue(TLV_TYPE_OBJECT,box);
 
     Student student;
-    int usernameLen = 20;
     box.GetCharValue(TLV_TYPE_SEX,student.sex);
-    box.GetStringValue(TLV_TYPE_USERNAME,student.username,usernameLen);
+    box.GetStringValue(TLV_TYPE_USERNAME,student.username);
     box.GetIntValue(TLV_TYPE_AGE,student.age);
     box.GetLongLongValue(TLV_TYPE_SNO,student.sno);
     box.GetFloatValue(TLV_TYPE_SCORE,student.score);
 
     LOG("Read student success, sex = %d, username = %s, age = %d, sno = %lld, score = %0.2f \n",
-         student.sex,student.username,student.age,student.sno,student.score);
+         student.sex,student.username.c_str(),student.age,student.sno,student.score);
 
     fclose(rp);
 

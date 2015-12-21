@@ -25,6 +25,7 @@ Usage
     bool PutFloatValue(int type,const float &value);
     bool PutDoubleValue(int type,const double &value);
     bool PutStringValue(int type,const char *value);
+    bool PutStringValue(int type,const std::string &value);
     bool PutBytesValue(int type,const unsigned char *value,int length);
     bool PutObjectValue(int type,const TlvBox& value);
     bool PutValue(int type,const void *value,int length);     
@@ -50,6 +51,7 @@ Usage
     bool GetFloatValue(int type,float &value) const;
     bool GetDoubleValue(int type,double &value) const;
     bool GetStringValue(int type,char *value,int &length) const;
+    bool GetStringValue(int type,std::string &value) const;
     bool GetBytesValue(int type,unsigned char *value,int &length) const;
     bool GetBytesValuePtr(int type,unsigned char **value,int &length) const;
     bool GetObjectValue(int type,TlvBox& value) const;
