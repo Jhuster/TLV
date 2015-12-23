@@ -14,6 +14,7 @@
 #define _TLV_BOX_H_
 
 #include <map>
+#include <string>
 
 namespace tlv
 {
