@@ -11,7 +11,7 @@
  */
 
 #include <string.h>
-#include <arpa/inet.h>
+#include "Tlv.h"
 #include "TlvBox.h"
 
 namespace tlv
@@ -28,6 +28,12 @@ TlvBox::~TlvBox()
         delete[] mSerializedBuffer;
         mSerializedBuffer = NULL;
     }
+
+    std::map<int,Tlv*>::iterator itor;
+    for(itor=mTlvMap.begin(); itor != mTlvMap.end(); itor++) {
+        delete itor->second;
+    }
+
     mTlvMap.clear();
 }
 
@@ -40,17 +46,16 @@ bool TlvBox::Serialize()
     int offset = 0;
     mSerializedBuffer = new unsigned char[mSerializedBytes];
 
-    std::map<int,Tlv>::iterator itor;
-    for(itor=mTlvMap.begin();itor!=mTlvMap.end();itor++) {
-        int type = htonl(itor->second.type);
+    std::map<int,Tlv*>::iterator itor;
+    for(itor=mTlvMap.begin();itor!=mTlvMap.end();itor++) {    
+        int type = itor->second->GetType();
         memcpy(mSerializedBuffer+offset,&type,sizeof(int));
-        offset += sizeof(int);
-        int length = htonl(itor->second.length);
+        offset += sizeof(int);        
+        int length = itor->second->GetLength();
         memcpy(mSerializedBuffer+offset,&length,sizeof(int));
         offset += sizeof(int);
-        memcpy(mSerializedBuffer+offset,itor->second.value,itor->second.length);
-        itor->second.value = mSerializedBuffer+offset;
-        offset += itor->second.length;
+        memcpy(mSerializedBuffer+offset,itor->second->GetValue(),length);        
+        offset += length;
     }
 
     return true;
@@ -58,7 +63,7 @@ bool TlvBox::Serialize()
 
 bool TlvBox::Parse(const unsigned char *buffer,int buffersize)
 {
-    if(mSerializedBuffer != NULL) {
+    if(mSerializedBuffer != NULL || buffer == NULL) {
         return false;
     }
 
@@ -67,11 +72,11 @@ bool TlvBox::Parse(const unsigned char *buffer,int buffersize)
 
     int offset = 0;
     while(offset < buffersize) {
-        int type = ntohl((*(int *)(cached+offset)));
+        int type = (*(int *)(cached+offset));
         offset += sizeof(int);
-        int length = ntohl((*(int *)(cached+offset)));
+        int length = (*(int *)(cached+offset));
         offset += sizeof(int);
-        PutValue(type,cached+offset,length);
+        PutValue(new Tlv(type,cached+offset,length));
         offset += length;
     }
 
@@ -91,155 +96,200 @@ int TlvBox::GetSerializedBytes() const
     return mSerializedBytes;
 }
 
-bool TlvBox::PutValue(int type,const void *value,int length)
+bool TlvBox::PutValue(Tlv *value)
 {
-    if(mSerializedBuffer != NULL || value == NULL) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(value->GetType());
+    if(itor != mTlvMap.end()) {
+        delete itor->second;        
     }
-    Tlv obj;
-    obj.type  = type;
-    obj.value = value;
-    obj.length = length;
-    mTlvMap.insert(std::pair<int,Tlv>(type,obj));
-    mSerializedBytes += (sizeof(int)*2+length);
+    else {
+        mSerializedBytes += (sizeof(int)*2+value->GetLength());
+    }   
+
+    mTlvMap.insert(std::pair<int,Tlv*>(value->GetType(),value));  
+
     return true;
 }
 
-bool TlvBox::PutCharValue(int type,const char &value)
+bool TlvBox::PutBoolValue(int type,bool value)
 {
-    return PutValue(type,&value,sizeof(char));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutShortValue(int type,const short &value)
+bool TlvBox::PutCharValue(int type,char value)
 {
-    return PutValue(type,&value,sizeof(short));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutIntValue(int type,const int &value)
+bool TlvBox::PutShortValue(int type,short value)
 {
-    return PutValue(type,&value,sizeof(int));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutLongValue(int type,const long &value)
+bool TlvBox::PutIntValue(int type,int value)
 {
-    return PutValue(type,&value,sizeof(long));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutLongLongValue(int type,const long long &value)
+bool TlvBox::PutLongValue(int type,long value)
 {
-    return PutValue(type,&value,sizeof(long long));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutFloatValue(int type,const float &value)
+bool TlvBox::PutLongLongValue(int type,long long value)
 {
-    return PutValue(type,&value,sizeof(float));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutDoubleValue(int type,const double &value)
+bool TlvBox::PutFloatValue(int type,float value)
 {
-    return PutValue(type,&value,sizeof(float));
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutStringValue(int type,const char *value)
+bool TlvBox::PutDoubleValue(int type,double value)
 {
-    return PutValue(type,value,strlen(value)+1);
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
+}
+
+bool TlvBox::PutStringValue(int type,char *value)
+{
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
 bool TlvBox::PutStringValue(int type,const std::string &value)
 {
-    int length = value.size()+1;
-    return PutValue(type,value.c_str(),length);
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value));
 }
 
-bool TlvBox::PutBytesValue(int type,const unsigned char *value,int length)
+bool TlvBox::PutBytesValue(int type,unsigned char *value,int length)
 {
-    return PutValue(type,value,length);
+    if(mSerializedBuffer != NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,value,length));
 }
 
 bool TlvBox::PutObjectValue(int type,const TlvBox& value)
 {
-    return PutValue(type,value.GetSerializedBuffer(),value.GetSerializedBytes());   
-}
-
-bool TlvBox::GetValue(int type,const void **value,int& length) const
-{
-    std::map<int,Tlv>::const_iterator itor = mTlvMap.find(type);
-    if(itor == mTlvMap.end()) {
+    if(mSerializedBuffer != NULL) {
         return false;
     }
-    *value = itor->second.value;
-    length = itor->second.length;
-    return true;
+    unsigned char *buffer = value.GetSerializedBuffer();
+    if(buffer == NULL) {
+        return false;
+    }
+    return PutValue(new Tlv(type,buffer,value.GetSerializedBytes()));
+}
+
+bool TlvBox::GetBoolValue(int type,bool &value) const
+{
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(bool *)(itor->second->GetValue()));
+        return true;
+    }
+    return false;
 }
 
 bool TlvBox::GetCharValue(int type,char &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(char *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(char *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetShortValue(int type,short &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(short *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(short *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetIntValue(int type,int &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(int *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(int *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetLongValue(int type,long &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(long *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(long *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetLongLongValue(int type,long long &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(long long *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(long long *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetFloatValue(int type,float& value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(float *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(float *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetDoubleValue(int type,double& value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {
+        value = (*(double *)(itor->second->GetValue()));
+        return true;
     }
-    value = (*(double *)(obj.value));
-    return true;
+    return false;
 }
 
 bool TlvBox::GetStringValue(int type,char *value,int &length) const
@@ -249,47 +299,50 @@ bool TlvBox::GetStringValue(int type,char *value,int &length) const
 
 bool TlvBox::GetStringValue(int type,std::string &value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor != mTlvMap.end()) {        
+        value = (char *)(itor->second->GetValue());        
+        return true;
     }
-    value = (char *)obj.value;
-    return true;
+    return false;
 }
 
 bool TlvBox::GetBytesValue(int type,unsigned char *value,int &length) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length) || length < obj.length) {
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor == mTlvMap.end()) {
         return false;
     }
+
+    if(length < itor->second->GetLength()) {
+        return false;
+    }
+
     memset(value,0,length);
-    length = obj.length;
-    memcpy(value,obj.value,obj.length);
+    length = itor->second->GetLength();
+    memcpy(value,itor->second->GetValue(),length);
+
     return true;
 }
 
 bool TlvBox::GetBytesValuePtr(int type,unsigned char **value,int &length) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor == mTlvMap.end()) {
+        return false;        
     }
-    *value = (unsigned char *)obj.value;
-    length = obj.length;
+    *value = itor->second->GetValue();
+    length = itor->second->GetLength();    
     return true;
 }
 
 bool TlvBox::GetObjectValue(int type,TlvBox& value) const
 {
-    Tlv obj;
-    if(!GetValue(type,&obj.value,obj.length)) {
-        return false;
+    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(type);
+    if(itor == mTlvMap.end()) {
+        return false;    
     }
-    if(!value.Parse((const unsigned char *)obj.value,obj.length)) {
-        return false;   
-    }    
-    return true;
+    return value.Parse(itor->second->GetValue(),itor->second->GetLength());
 }
 
 

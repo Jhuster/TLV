@@ -8,7 +8,7 @@ It can help you construct & parse one or several TLV objects.
 Building
 ----------
 
-    g++ -o test Test.cpp TlvBox.cpp 
+    g++ -o test Test.cpp TlvBox.cpp Tlv.cpp
     ./test
 
 Usage
@@ -17,18 +17,18 @@ Usage
  **1. Public functions for encode**
 
     //put one TLV box
-    bool PutCharValue(int type,const char &value);
-    bool PutShortValue(int type,const short &value);
-    bool PutIntValue(int type,const int &value);
-    bool PutLongValue(int type,const long &value);
-    bool PutLongLongValue(int type,const long long &value);
-    bool PutFloatValue(int type,const float &value);
-    bool PutDoubleValue(int type,const double &value);
-    bool PutStringValue(int type,const char *value);
+    bool PutBoolValue(int type,bool value);
+    bool PutCharValue(int type,char value);
+    bool PutShortValue(int type,short value);
+    bool PutIntValue(int type,int value);
+    bool PutLongValue(int type,long value);
+    bool PutLongLongValue(int type,long long value);
+    bool PutFloatValue(int type,float value);
+    bool PutDoubleValue(int type,double value);
+    bool PutStringValue(int type,char *value);
     bool PutStringValue(int type,const std::string &value);
-    bool PutBytesValue(int type,const unsigned char *value,int length);
-    bool PutObjectValue(int type,const TlvBox& value);
-    bool PutValue(int type,const void *value,int length);     
+    bool PutBytesValue(int type,unsigned char *value,int length);
+    bool PutObjectValue(int type,const TlvBox& value);          
     
     //do encode
     bool Serialize(); 
@@ -43,6 +43,7 @@ Usage
     bool Parse(const unsigned char *buffer,int buffersize); 
     
     //get one TLV box
+    bool GetBoolValue(int type,bool &value) const;
     bool GetCharValue(int type,char &value) const;
     bool GetShortValue(int type,short &value) const;
     bool GetIntValue(int type,int &value) const;
@@ -55,7 +56,6 @@ Usage
     bool GetBytesValue(int type,unsigned char *value,int &length) const;
     bool GetBytesValuePtr(int type,unsigned char **value,int &length) const;
     bool GetObjectValue(int type,TlvBox& value) const;
-    bool GetValue(int type,const void **value,int& length) const;
 
  **3. Sample code**
  
