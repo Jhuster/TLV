@@ -1,4 +1,4 @@
-tlv
+tlv_box
 ----------
 
 An easy-to-use TLV API in C 
@@ -29,8 +29,7 @@ Usage
     int tlv_box_put_double(tlv_box_t *box,int type,double value);
     int tlv_box_put_string(tlv_box_t *box,int type,char* value);
     int tlv_box_put_bytes(tlv_box_t *box,int type,unsigned char *value,int length);
-    int tlv_box_put_object(tlv_box_t *box,int type,tlv_box_t *object);
-    int tlv_box_serialize(tlv_box_t *box);
+    int tlv_box_put_object(tlv_box_t *box,int type,tlv_box_t *object);    
     
     //do encode
     int tlv_box_serialize(tlv_box_t *box);
