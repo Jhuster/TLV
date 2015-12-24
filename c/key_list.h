@@ -15,12 +15,11 @@
 #include <stdlib.h>
 
 typedef struct _value {
-    int type;
-    int length;
     void *value;
 } value_t;
 
 typedef int key_t;
+typedef void (*value_releaser)(value_t value);
 
 #define key_compare(a,b) ((a==b)?1:0)
 
@@ -34,9 +33,10 @@ typedef struct key_list_node {
 typedef struct key_list {
     int count;
     key_list_node_t *header;      
+    value_releaser releaser;
 } key_list_t;
 
-key_list_t *key_list_create();
+key_list_t *key_list_create(value_releaser releaser);
 int key_list_destroy(key_list_t *list);
 
 int key_list_count(key_list_t *list);

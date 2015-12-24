@@ -12,167 +12,145 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "tlv.h"
+#include "tlv_box.h"
 
-#define TLV_TYPE_OBJECTS   0xff
-
-#define TLV_TYPE_USERNAME  0x01
-#define TLV_TYPE_PASSWORD  0x02
-#define TLV_TYPE_SEX       0x03
-#define TLV_TYPE_AGE       0x04
-#define TLV_TYPE_SNO       0x05
-#define TLV_TYPE_SCORE     0x06
+#define TEST_TYPE_0 0x00
+#define TEST_TYPE_1 0x01
+#define TEST_TYPE_2 0x02
+#define TEST_TYPE_3 0x03
+#define TEST_TYPE_4 0x04
+#define TEST_TYPE_5 0x05
+#define TEST_TYPE_6 0x06
+#define TEST_TYPE_7 0x07
+#define TEST_TYPE_8 0x08
+#define TEST_TYPE_9 0x09
 
 #define LOG(format,...) printf(format,##__VA_ARGS__)
 
-typedef struct _file_header_t
-{
-    char startcode[4];
-    int content_length;
-} file_header_t;
-
-typedef struct _student_t
-{
-    char username[20];
-    char sex;
-    int  age;
-    long long sno;
-    float score;
-} student_t;
-
-static int test_write_tlv()
-{
-    const char *filepath = "student.txt";
-    FILE *wp = fopen(filepath,"wb");
-    if(wp == NULL) {
-        LOG("failed to open %s\n",filepath);
-        return -1;
-    }
-
-    student_t student;
-    strcpy(student.username,"jhuster");
-    student.sex = 1;
-    student.age = 28;
-    student.sno = 1234567890;
-    student.score = 98.55;
-
-    tlv_t *object = tlv_create();
-    tlv_put_char(object,TLV_TYPE_SEX,&student.sex);
-    tlv_put_string(object,TLV_TYPE_USERNAME,student.username);
-    tlv_put_int(object,TLV_TYPE_AGE,&student.age);
-    tlv_put_longlong(object,TLV_TYPE_SNO,&student.sno);
-    tlv_put_float(object,TLV_TYPE_SCORE,&student.score);
-
-    if(tlv_serialize(object) != 0) {
-        LOG("failed to serialize object !\n");
-        fclose(wp);
-        return -1;
-    }
-
-    tlv_t *objects = tlv_create();
-    tlv_put_object(objects,TLV_TYPE_OBJECTS,object);    
-    if(tlv_serialize(objects) != 0) {
-        LOG("failed to serialize objects !\n");
-        fclose(wp);
-        return -1;
-    }
-
-    file_header_t header;
-    header.startcode[0] = 0x0A;
-    header.startcode[1] = 0x0B;
-    header.startcode[2] = 0x0C;
-    header.startcode[3] = 0x0D;
-    header.content_length = tlv_get_size(objects);
-
-    if(fwrite(&header,sizeof(header),1,wp) != 1) {
-        LOG("failed to write file_header_t !\n");
-        fclose(wp);
-        return -1;
-    }
-
-    if(fwrite(tlv_get_buffer(objects),tlv_get_size(objects),1,wp) != 1) {
-        LOG("failed to write objects !\n");
-        fclose(wp);
-        return -1;
-    }
-
-    fclose(wp);
-
-    tlv_destroy(object);
-    tlv_destroy(objects);
-
-    LOG("Write student success !\n");
-
-    return 0;
-}
-
-static int test_read_tlv()
-{
-    const char *filepath = "student.txt";
-    FILE *rp = fopen(filepath,"rb");
-    if(rp == NULL) {
-        LOG("failed to open %s\n",filepath);
-        return -1;
-    }
-
-    file_header_t header;
-    if(fread(&header,sizeof(header),1,rp) != 1) {
-        LOG("failed to read file_header_t !\n");
-        fclose(rp);
-        return -1;
-    }
-
-    if(header.startcode[0] != 0x0A || header.startcode[1] != 0x0B ||
-       header.startcode[2] != 0x0C || header.startcode[3] != 0x0D) {
-        LOG("invalid file_header_t !\n");
-        fclose(rp);
-        return -1;
-    }
-
-    unsigned char *buffer = (unsigned char*)malloc(header.content_length*sizeof(char));
-    if(fread(buffer,header.content_length,1,rp) != 1) {
-        LOG("failed to read student !\n");
-        fclose(rp);
-        return -1;
-    }
-
-    tlv_t* objects = tlv_parse(buffer,header.content_length);
-    if(objects == NULL) {
-        LOG("failed to do parse !\n");
-        fclose(rp);
-        return -1;
-    }
-    free(buffer);
-    fclose(rp);
-
-    tlv_t* object = NULL;
-    if(tlv_get_object(objects,TLV_TYPE_OBJECTS,&object) != 0) {
-        LOG("failed get_object !\n");
-        return -1;
-    }
-
-    student_t student;
-    int usernameLen = 20;
-    tlv_get_char(object,TLV_TYPE_SEX,&student.sex);
-    tlv_get_string(object,TLV_TYPE_USERNAME,student.username,&usernameLen);
-    tlv_get_int(object,TLV_TYPE_AGE,&student.age);
-    tlv_get_longlong(object,TLV_TYPE_SNO,&student.sno);
-    tlv_get_float(object,TLV_TYPE_SCORE,&student.score);    
-
-    LOG("Read student success, sex = %d, username = %s, age = %d, sno = %lld, score = %0.2f \n",
-         student.sex,student.username,student.age,student.sno,student.score);
-
-    tlv_destroy(object);
-    tlv_destroy(objects);
-
-    return 0;
-}
-
 int main(int argc, char const *argv[])
 {
-    if(test_write_tlv() == 0 && test_read_tlv() == 0) {
-        LOG("All tests passed !\n");
+    tlv_box_t *box = tlv_box_create();    
+    tlv_box_put_char(box,TEST_TYPE_1, 'x');
+    tlv_box_put_short(box,TEST_TYPE_2,(short)2);
+    tlv_box_put_int(box,TEST_TYPE_3,(int)3);
+    tlv_box_put_long(box,TEST_TYPE_4,(long)4);
+    tlv_box_put_float(box,TEST_TYPE_5,(float)5.67);
+    tlv_box_put_double(box,TEST_TYPE_6,(double)8.91);
+    tlv_box_put_string(box,TEST_TYPE_7, (char *)"hello world !");    
+    unsigned char array[6] = {1,2,3,4,5,6};
+    tlv_box_put_bytes(box,TEST_TYPE_8,array,6);    
+
+    if(tlv_box_serialize(box) != 0) {
+        LOG("box serialize failed !\n");
+        return -1;
     }
+
+    LOG("box serialize success, %d bytes \n",tlv_box_get_size(box));
+
+    tlv_box_t *boxes = tlv_box_create();  
+    tlv_box_put_object(boxes,TEST_TYPE_9,box);
+    
+    if(tlv_box_serialize(boxes) != 0) {
+        LOG("boxes serialize failed !\n"); 
+        return -1;
+    }
+
+    LOG("boxes serialize success, %d bytes \n",tlv_box_get_size(boxes));
+    
+    tlv_box_t *parsedBoxes = tlv_box_parse(tlv_box_get_buffer(boxes),tlv_box_get_size(boxes));
+
+    LOG("boxes parse success, %d bytes \n",tlv_box_get_size(parsedBoxes));
+
+    tlv_box_t* parsedBox;
+    if(tlv_box_get_object(parsedBoxes,TEST_TYPE_9,&parsedBox) != 0) {
+        LOG("tlv_box_get_object failed !\n");
+        return -1;
+    }
+
+    LOG("box parse success, %d bytes \n",tlv_box_get_size(parsedBox));
+
+    {
+        char value;
+        if(tlv_box_get_char(parsedBox,TEST_TYPE_1,&value) != 0) {
+            LOG("tlv_box_get_char failed !\n");  
+            return -1;
+        }
+        LOG("tlv_box_get_char success %c \n",value);
+    }
+
+    {
+        short value;
+        if(tlv_box_get_short(parsedBox,TEST_TYPE_2,&value) != 0) {
+            LOG("tlv_box_get_short failed !\n");             
+            return -1;
+        }
+        LOG("tlv_box_get_short success %d \n",value);
+    }
+
+    {
+        int value;
+        if(tlv_box_get_int(parsedBox,TEST_TYPE_3,&value) != 0) {
+            LOG("tlv_box_get_int failed !\n");            
+            return -1;
+        }
+        LOG("tlv_box_get_int success %d \n",value);
+    }
+
+    {
+        long value;
+        if(tlv_box_get_long(parsedBox,TEST_TYPE_4,&value) != 0) {
+            LOG("tlv_box_get_long failed !\n");            
+            return -1;
+        }
+        LOG("tlv_box_get_long success %ld \n",value);
+    }
+
+    {
+        float value;
+        if(tlv_box_get_float(parsedBox,TEST_TYPE_5,&value) != 0) {
+            LOG("tlv_box_get_float failed !\n");            
+            return -1;
+        }
+        LOG("tlv_box_get_float success %f \n",value);
+    }
+
+    {
+        double value;
+        if(tlv_box_get_double(parsedBox,TEST_TYPE_6,&value) != 0) {
+            LOG("tlv_box_get_double failed !\n");            
+            return -1;
+        }
+        LOG("tlv_box_get_double success %f \n",value);
+    }
+
+    {
+        char value[128]; int length = 128;
+        if(tlv_box_get_string(parsedBox,TEST_TYPE_7,value,&length) != 0) {
+            LOG("tlv_box_get_string failed !\n");            
+            return -1;
+        }
+        LOG("tlv_box_get_string success %s \n",value);
+    }
+
+    {
+        unsigned char value[128]; int length = 128;
+        if(tlv_box_get_bytes(parsedBox,TEST_TYPE_8,value,&length) != 0) {
+            LOG("tlv_box_get_bytes failed !\n"); 
+            return -1;
+        }        
+
+        LOG("tlv_box_get_bytes success:  ");         
+        int i = 0;
+        for(i=0; i<length; i++) {
+            LOG("%d-",value[i]); 
+        }        
+        LOG("\n");
+    }
+
+    tlv_box_destroy(box);
+    tlv_box_destroy(boxes);
+    tlv_box_destroy(parsedBox);
+    tlv_box_destroy(parsedBoxes);
 
     return 0;
 }

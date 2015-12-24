@@ -11,11 +11,12 @@
  */
 #include "key_list.h"
 
-key_list_t *key_list_create() 
+key_list_t *key_list_create(value_releaser releaser) 
 {
-    key_list_t * list = calloc(1, sizeof(key_list_t));
+    key_list_t * list = (key_list_t * )malloc(sizeof(key_list_t));
     list->count = 0;
     list->header = NULL;
+    list->releaser = releaser;
     return list;
 }
 
@@ -24,6 +25,7 @@ int key_list_destroy(key_list_t *list)
     key_list_node_t *current = list->header;    
     while(current != NULL) {
         key_list_node_t *next = current->next;
+        list->releaser(current->value);  
         free(current);        
         current = next;
     }
@@ -76,7 +78,9 @@ static int key_list_remove_node(key_list_t *list,key_list_node_t *node)
 
     if(node->next != NULL) {
         node->next->prev = node->prev;                        
-    }            
+    }         
+
+    list->releaser(node->value); 
 
     free(node);
     list->count--;
