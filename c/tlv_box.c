@@ -37,7 +37,7 @@ tlv_box_t *tlv_box_parse(unsigned char *buffer,int buffersize)
     memcpy(cached,buffer,buffersize);
 
     int offset = 0, length = 0;
-    while(offset < buffersize) {
+    while (offset < buffersize) {
         int type = (*(int *)(cached+offset));
         offset += sizeof(int);
         int length = (*(int *)(cached+offset));
@@ -55,7 +55,7 @@ tlv_box_t *tlv_box_parse(unsigned char *buffer,int buffersize)
 int tlv_box_destroy(tlv_box_t *box)
 {
     key_list_destroy(box->m_list);
-    if(box->m_serialized_buffer != NULL) {
+    if (box->m_serialized_buffer != NULL) {
         free(box->m_serialized_buffer);        
     }
 
@@ -76,7 +76,7 @@ int tlv_box_get_size(tlv_box_t *box)
 
 int tlv_box_putobject(tlv_box_t *box,int type,void *value,int length)
 {
-    if(box->m_serialized_buffer != NULL) {
+    if (box->m_serialized_buffer != NULL) {
         return -1;
     }
 
@@ -89,7 +89,7 @@ int tlv_box_putobject(tlv_box_t *box,int type,void *value,int length)
     value_t object;
     object.value = tlv;
 
-    if(key_list_add(box->m_list,type,object) != 0) {
+    if (key_list_add(box->m_list,type,object) != 0) {
         return -1;
     }    
     box->m_serialized_bytes += sizeof(int)*2+length;
@@ -149,7 +149,7 @@ int tlv_box_put_object(tlv_box_t *box,int type,tlv_box_t *object)
 
 int tlv_box_serialize(tlv_box_t *box)
 {
-    if(box->m_serialized_buffer != NULL) {
+    if (box->m_serialized_buffer != NULL) {
         return -1;
     }
 
@@ -173,7 +173,7 @@ int tlv_box_serialize(tlv_box_t *box)
 int tlv_box_get_char(tlv_box_t *box,int type,char *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -184,7 +184,7 @@ int tlv_box_get_char(tlv_box_t *box,int type,char *value)
 int tlv_box_get_short(tlv_box_t *box,int type,short *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -195,7 +195,7 @@ int tlv_box_get_short(tlv_box_t *box,int type,short *value)
 int tlv_box_get_int(tlv_box_t *box,int type,int *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -206,7 +206,7 @@ int tlv_box_get_int(tlv_box_t *box,int type,int *value)
 int tlv_box_get_long(tlv_box_t *box,int type,long *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -217,7 +217,7 @@ int tlv_box_get_long(tlv_box_t *box,int type,long *value)
 int tlv_box_get_longlong(tlv_box_t *box,int type,long long *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -228,7 +228,7 @@ int tlv_box_get_longlong(tlv_box_t *box,int type,long long *value)
 int tlv_box_get_float(tlv_box_t *box,int type,float *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -239,7 +239,7 @@ int tlv_box_get_float(tlv_box_t *box,int type,float *value)
 int tlv_box_get_double(tlv_box_t *box,int type,double *value)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -255,11 +255,11 @@ int tlv_box_get_string(tlv_box_t *box,int type,char *value,int* length)
 int tlv_box_get_bytes(tlv_box_t *box,int type,unsigned char *value,int* length)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
-    if(*length < tlv->length) {
+    if (*length < tlv->length) {
         return -1;
     }
     memset(value,0,*length);
@@ -271,7 +271,7 @@ int tlv_box_get_bytes(tlv_box_t *box,int type,unsigned char *value,int* length)
 int tlv_box_get_bytes_ptr(tlv_box_t *box,int type,unsigned char **value,int* length)
 {
     value_t object;
-    if(key_list_get(box->m_list,type,&object) != 0) {
+    if (key_list_get(box->m_list,type,&object) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)object.value;
@@ -283,7 +283,7 @@ int tlv_box_get_bytes_ptr(tlv_box_t *box,int type,unsigned char **value,int* len
 int tlv_box_get_object(tlv_box_t *box,int type,tlv_box_t **object)
 {
     value_t value;
-    if(key_list_get(box->m_list,type,&value) != 0) {
+    if (key_list_get(box->m_list,type,&value) != 0) {
         return -1;
     }
     tlv_t *tlv = (tlv_t *)value.value;

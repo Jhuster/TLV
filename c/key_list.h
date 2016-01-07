@@ -50,6 +50,6 @@ int key_list_delete(key_list_t *list,key_t key);
 
 #define key_list_foreach(L,V) key_list_node_t *_node = NULL;\
     key_list_node_t* V;\
-    for(V = _node = L->header; _node != NULL; V = _node = _node->next)
+    for (V = _node = L->header; _node != NULL; V = _node = _node->next)
 
 #endif

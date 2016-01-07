@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
     unsigned char array[6] = {1,2,3,4,5,6};
     tlv_box_put_bytes(box,TEST_TYPE_8,array,6);    
 
-    if(tlv_box_serialize(box) != 0) {
+    if (tlv_box_serialize(box) != 0) {
         LOG("box serialize failed !\n");
         return -1;
     }
@@ -50,7 +50,7 @@ int main(int argc, char const *argv[])
     tlv_box_t *boxes = tlv_box_create();  
     tlv_box_put_object(boxes,TEST_TYPE_9,box);
     
-    if(tlv_box_serialize(boxes) != 0) {
+    if (tlv_box_serialize(boxes) != 0) {
         LOG("boxes serialize failed !\n"); 
         return -1;
     }
@@ -62,7 +62,7 @@ int main(int argc, char const *argv[])
     LOG("boxes parse success, %d bytes \n",tlv_box_get_size(parsedBoxes));
 
     tlv_box_t* parsedBox;
-    if(tlv_box_get_object(parsedBoxes,TEST_TYPE_9,&parsedBox) != 0) {
+    if (tlv_box_get_object(parsedBoxes,TEST_TYPE_9,&parsedBox) != 0) {
         LOG("tlv_box_get_object failed !\n");
         return -1;
     }
@@ -71,7 +71,7 @@ int main(int argc, char const *argv[])
 
     {
         char value;
-        if(tlv_box_get_char(parsedBox,TEST_TYPE_1,&value) != 0) {
+        if (tlv_box_get_char(parsedBox,TEST_TYPE_1,&value) != 0) {
             LOG("tlv_box_get_char failed !\n");  
             return -1;
         }
@@ -80,7 +80,7 @@ int main(int argc, char const *argv[])
 
     {
         short value;
-        if(tlv_box_get_short(parsedBox,TEST_TYPE_2,&value) != 0) {
+        if (tlv_box_get_short(parsedBox,TEST_TYPE_2,&value) != 0) {
             LOG("tlv_box_get_short failed !\n");             
             return -1;
         }
@@ -89,7 +89,7 @@ int main(int argc, char const *argv[])
 
     {
         int value;
-        if(tlv_box_get_int(parsedBox,TEST_TYPE_3,&value) != 0) {
+        if (tlv_box_get_int(parsedBox,TEST_TYPE_3,&value) != 0) {
             LOG("tlv_box_get_int failed !\n");            
             return -1;
         }
@@ -98,7 +98,7 @@ int main(int argc, char const *argv[])
 
     {
         long value;
-        if(tlv_box_get_long(parsedBox,TEST_TYPE_4,&value) != 0) {
+        if (tlv_box_get_long(parsedBox,TEST_TYPE_4,&value) != 0) {
             LOG("tlv_box_get_long failed !\n");            
             return -1;
         }
@@ -107,7 +107,7 @@ int main(int argc, char const *argv[])
 
     {
         float value;
-        if(tlv_box_get_float(parsedBox,TEST_TYPE_5,&value) != 0) {
+        if (tlv_box_get_float(parsedBox,TEST_TYPE_5,&value) != 0) {
             LOG("tlv_box_get_float failed !\n");            
             return -1;
         }
@@ -116,7 +116,7 @@ int main(int argc, char const *argv[])
 
     {
         double value;
-        if(tlv_box_get_double(parsedBox,TEST_TYPE_6,&value) != 0) {
+        if (tlv_box_get_double(parsedBox,TEST_TYPE_6,&value) != 0) {
             LOG("tlv_box_get_double failed !\n");            
             return -1;
         }
@@ -125,7 +125,7 @@ int main(int argc, char const *argv[])
 
     {
         char value[128]; int length = 128;
-        if(tlv_box_get_string(parsedBox,TEST_TYPE_7,value,&length) != 0) {
+        if (tlv_box_get_string(parsedBox,TEST_TYPE_7,value,&length) != 0) {
             LOG("tlv_box_get_string failed !\n");            
             return -1;
         }
@@ -134,7 +134,7 @@ int main(int argc, char const *argv[])
 
     {
         unsigned char value[128]; int length = 128;
-        if(tlv_box_get_bytes(parsedBox,TEST_TYPE_8,value,&length) != 0) {
+        if (tlv_box_get_bytes(parsedBox,TEST_TYPE_8,value,&length) != 0) {
             LOG("tlv_box_get_bytes failed !\n"); 
             return -1;
         }        
