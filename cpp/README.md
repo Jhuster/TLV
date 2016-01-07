@@ -8,7 +8,7 @@ It can help you construct & parse one or several TLV objects.
 Building
 ----------
 
-    g++ -o test Test.cpp TlvBox.cpp Tlv.cpp
+    g++ -o test test.cpp tlv_box.cpp tlv.cpp
     ./test
 
 Usage

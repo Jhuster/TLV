@@ -10,9 +10,9 @@
  *  the Free Software Foundation; version 2 of the License.  
  */
 
-#include "Tlv.h"
 #include <string.h>
-
+#include "tlv.h"
+ 
 namespace tlv
 {
 
@@ -78,7 +78,7 @@ Tlv::Tlv(int type,const Tlv& value) : mType(type)
 
 Tlv::~Tlv()
 {
-    delete mValue;
+    delete[] mValue;
 }
 
 void Tlv::Initialize(const void *value,int length)
