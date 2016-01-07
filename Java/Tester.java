@@ -49,7 +49,7 @@ public class Tester {
         System.out.println("TEST_TYPE_6: " + parsedObject.getDoubleValue(TEST_TYPE_6));
         System.out.println("TEST_TYPE_7: " + parsedObject.getStringValue(TEST_TYPE_7));
         byte[] bytes = parsedObject.getBytesValue(TEST_TYPE_8);
-        for(byte value : bytes) {
+        for (byte value : bytes) {
             System.out.println("TEST_TYPE_8: " + value);
         }        
     }

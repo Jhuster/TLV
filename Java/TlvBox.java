@@ -30,7 +30,7 @@ public class TlvBox {
         TlvBox box = new TlvBox();
         
         int parsed = 0;
-        while(parsed < length) {
+        while (parsed < length) {
             int type = ByteBuffer.wrap(buffer,offset+parsed,4).order(DEFAULT_BYTE_ORDER).getInt();
             parsed += 4;
             int size = ByteBuffer.wrap(buffer,offset+parsed,4).order(DEFAULT_BYTE_ORDER).getInt();
@@ -47,7 +47,7 @@ public class TlvBox {
         int offset = 0;
         byte[] result = new byte[mTotalBytes];                
         Set<Integer> keys = mObjects.keySet();        
-        for(Integer key : keys) {
+        for (Integer key : keys) {
             byte[] bytes = mObjects.get(key);
             byte[] type   = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putInt(key).array();
             byte[] length = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putInt(bytes.length).array();
@@ -107,7 +107,7 @@ public class TlvBox {
     
     public Byte getByteValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return bytes[0];
@@ -115,7 +115,7 @@ public class TlvBox {
         
     public Short getShortValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getShort();
@@ -123,7 +123,7 @@ public class TlvBox {
     
     public Integer getIntValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getInt();
@@ -131,7 +131,7 @@ public class TlvBox {
     
     public Long getLongValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getLong();
@@ -139,7 +139,7 @@ public class TlvBox {
     
     public Float getFloatValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getFloat();
@@ -147,7 +147,7 @@ public class TlvBox {
     
     public Double getDoubleValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return ByteBuffer.wrap(bytes).order(DEFAULT_BYTE_ORDER).getDouble();
@@ -155,7 +155,7 @@ public class TlvBox {
     
     public TlvBox getObjectValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return TlvBox.parse(bytes, 0, bytes.length);
@@ -163,7 +163,7 @@ public class TlvBox {
     
     public String getStringValue(int type) {
         byte[] bytes = mObjects.get(type);
-        if(bytes == null) {
+        if (bytes == null) {
             return null;
         }
         return new String(bytes).trim();

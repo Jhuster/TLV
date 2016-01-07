@@ -53,7 +53,7 @@ public class Tester {
         Log.d("Tester", "TEST_TYPE_6: " + parsedObject.getDoubleValue(TEST_TYPE_6));
         Log.d("Tester", "TEST_TYPE_7: " + parsedObject.getStringValue(TEST_TYPE_7));
         byte[] bytes = parsedObject.getBytesValue(TEST_TYPE_8);
-        for(byte value : bytes) {
+        for (byte value : bytes) {
             Log.d("Tester", "TEST_TYPE_8: " + value);
         }        
         
