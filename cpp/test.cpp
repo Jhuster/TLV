@@ -172,6 +172,21 @@ int main(int argc, char const *argv[])
         std::cout << std::endl;
     }
 
+{
+     TlvBox box3;       
+ 
+             if (!box3.PutStringValue(TEST_TYPE_7, (char *)"hello world 1234567890!"))  
+                    std::cout << "box3.PutStringValue #1 Failed !\n";
+      
+             //as a test, overwrite existing string with different string
+             if (!box3.PutStringValue(TEST_TYPE_7, (char *)"bye bye"))   //<----  type 7 = string with len = 13
+                    std::cout << "box3.PutStringValue #2 Failed !\n";
+ 
+             if (!box3.Serialize()) {
+                    std::cout << "box3 Serialize Failed !\n";
+                    return -1;
+             }
+}
 
     return 0;
 }
