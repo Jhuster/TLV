@@ -98,15 +98,17 @@ int TlvBox::GetSerializedBytes() const
 
 bool TlvBox::PutValue(Tlv *value)
 {
-    std::map<int,Tlv*>::const_iterator itor = mTlvMap.find(value->GetType());
+    std::map<int,Tlv*>::iterator itor = mTlvMap.find(value->GetType());
     if (itor != mTlvMap.end()) {
-        delete itor->second;        
+        Tlv *prevTlv = itor->second;
+        mSerializedBytes = mSerializedBytes - (sizeof(int) * 2 + prevTlv->GetLength());
+        delete itor->second;
+        itor->second = value;    
     } else {
-        mSerializedBytes += (sizeof(int)*2+value->GetLength());
-    }   
-
-    mTlvMap.insert(std::pair<int,Tlv*>(value->GetType(),value));  
-
+        mTlvMap.insert(std::pair<int, Tlv*>(value->GetType(), value));
+    }  
+ 
+    mSerializedBytes += (sizeof(int) * 2 + value->GetLength());
     return true;
 }
 
