@@ -50,7 +50,7 @@ int main(int argc, char const *argv[])
     }
 
     std::cout << "box Serialize Success, " << box.GetSerializedBytes() << " bytes \n";
-
+    std::cout << "box Serialize Success, " << box.GetSerializedBuffer() << "\n";
     TlvBox boxes;
     boxes.PutObjectValue(TEST_TYPE_a, box);
     
