@@ -29,13 +29,13 @@ public class Tester {
         
         TlvBox box = new TlvBox();
         box.putByteValue(TEST_TYPE_1, (byte)1);
-        box.putShortValue(TEST_TYPE_2,(short)2);
-        box.putIntValue(TEST_TYPE_3,(int)3);
-        box.putLongValue(TEST_TYPE_4,(long)4);
-        box.putFloatValue(TEST_TYPE_5,(float)5.67);
-        box.putDoubleValue(TEST_TYPE_6,(double)8.91);
+        box.putShortValue(TEST_TYPE_2, (short)2);
+        box.putIntValue(TEST_TYPE_3, (int)3);
+        box.putLongValue(TEST_TYPE_4, (long)4);
+        box.putFloatValue(TEST_TYPE_5, (float)5.67);
+        box.putDoubleValue(TEST_TYPE_6, (double)8.91);
         box.putStringValue(TEST_TYPE_7, "hello world !");
-        box.putBytesValue(TEST_TYPE_8,new byte[] {1,2,3,4,5,6} );
+        box.putBytesValue(TEST_TYPE_8, new byte[] {1,2,3,4,5,6} );
         
         TlvBox boxes = new TlvBox();
         boxes.putObjectValue(TEST_TYPE_9, box);
@@ -52,6 +52,7 @@ public class Tester {
         Log.d("Tester", "TEST_TYPE_5: " + parsedObject.getFloatValue(TEST_TYPE_5));
         Log.d("Tester", "TEST_TYPE_6: " + parsedObject.getDoubleValue(TEST_TYPE_6));
         Log.d("Tester", "TEST_TYPE_7: " + parsedObject.getStringValue(TEST_TYPE_7));
+        
         byte[] bytes = parsedObject.getBytesValue(TEST_TYPE_8);
         for (byte value : bytes) {
             Log.d("Tester", "TEST_TYPE_8: " + value);

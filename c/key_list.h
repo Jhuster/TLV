@@ -21,7 +21,7 @@ typedef struct _value {
 typedef int key_t;
 typedef void (*value_releaser)(value_t value);
 
-#define key_compare(a,b) ((a==b)?1:0)
+#define key_compare(a, b) ((a==b)?1:0)
 
 typedef struct key_list_node { 
     key_t key;
@@ -40,13 +40,13 @@ key_list_t *key_list_create(value_releaser releaser);
 int key_list_destroy(key_list_t *list);
 
 int key_list_count(key_list_t *list);
-int key_list_keyset(key_list_t *list,key_t* array,int array_size);
-int key_list_find_key(key_list_t *list,key_t key);
+int key_list_keyset(key_list_t *list, key_t* array, int array_size);
+int key_list_find_key(key_list_t *list, key_t key);
 
-int key_list_add(key_list_t *list,key_t key,value_t value);
-int key_list_get(key_list_t *list,key_t key,value_t *value);
-int key_list_edit(key_list_t *list,key_t key,value_t value);
-int key_list_delete(key_list_t *list,key_t key);
+int key_list_add(key_list_t *list, key_t key, value_t value);
+int key_list_get(key_list_t *list, key_t key, value_t *value);
+int key_list_edit(key_list_t *list, key_t key, value_t value);
+int key_list_delete(key_list_t *list, key_t key);
 
 #define key_list_foreach(L,V) key_list_node_t *_node = NULL;\
     key_list_node_t* V;\

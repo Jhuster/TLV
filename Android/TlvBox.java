@@ -27,19 +27,19 @@ public class TlvBox {
         mObjects = new SparseArray<byte[]>();
     }
     
-    public static TlvBox parse(byte[] buffer,int offset,int length) {
+    public static TlvBox parse(byte[] buffer, int offset, int length) {
         
         TlvBox box = new TlvBox();
         
         int parsed = 0;
         while (parsed < length) {
-            int type = ByteBuffer.wrap(buffer,offset+parsed,4).order(DEFAULT_BYTE_ORDER).getInt();
+            int type = ByteBuffer.wrap(buffer, offset + parsed, 4).order(DEFAULT_BYTE_ORDER).getInt();
             parsed += 4;
-            int size = ByteBuffer.wrap(buffer,offset+parsed,4).order(DEFAULT_BYTE_ORDER).getInt();
+            int size = ByteBuffer.wrap(buffer, offset+  parsed, 4).order(DEFAULT_BYTE_ORDER).getInt();
             parsed += 4;
             byte[] value = new byte[size];
-            System.arraycopy(buffer, offset+parsed, value, 0, size);
-            box.putBytesValue(type,value);
+            System.arraycopy(buffer, offset + parsed, value, 0, size);
+            box.putBytesValue(type, value);
             parsed += size;
         }        
         
@@ -67,32 +67,32 @@ public class TlvBox {
     public void putByteValue(int type,byte value) {
         byte[] bytes = new byte[1];        
         bytes[0] = value;
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
         
     public void putShortValue(int type,short value) {
         byte[] bytes = ByteBuffer.allocate(2).order(DEFAULT_BYTE_ORDER).putShort(value).array();
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
     
     public void putIntValue(int type,int value) {
         byte[] bytes = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putInt(value).array();
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
     
     public void putLongValue(int type,long value) {
         byte[] bytes = ByteBuffer.allocate(8).order(DEFAULT_BYTE_ORDER).putLong(value).array();
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
     
     public void putFloatValue(int type,float value) {
         byte[] bytes = ByteBuffer.allocate(4).order(DEFAULT_BYTE_ORDER).putFloat(value).array();
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
     
     public void putDoubleValue(int type,double value) {
         byte[] bytes = ByteBuffer.allocate(8).order(DEFAULT_BYTE_ORDER).putDouble(value).array();
-        putBytesValue(type,bytes);
+        putBytesValue(type, bytes);
     }
     
     public void putStringValue(int type,String value) {         

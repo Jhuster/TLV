@@ -38,7 +38,7 @@ int key_list_count(key_list_t *list)
     return list->count;    
 }
 
-int key_list_keyset(key_list_t *list,key_t* array,int array_size)
+int key_list_keyset(key_list_t *list, key_t* array, int array_size)
 {    
     if (array_size < list->count) {
         return -1;
@@ -48,14 +48,14 @@ int key_list_keyset(key_list_t *list,key_t* array,int array_size)
     key_list_node_t *current = list->header;
     while (current != NULL) {
         array[i] = current->key; 
-        current  = current->next;
+        current = current->next;
         i++;
     }
 
     return i; 
 }
 
-static key_list_node_t* key_list_get_node(key_list_t *list,key_t key) 
+static key_list_node_t* key_list_get_node(key_list_t *list, key_t key) 
 {
     key_list_node_t *current = list->header;    
     while (current != NULL) {
@@ -67,7 +67,7 @@ static key_list_node_t* key_list_get_node(key_list_t *list,key_t key)
     return NULL;
 }
 
-static int key_list_remove_node(key_list_t *list,key_list_node_t *node) 
+static int key_list_remove_node(key_list_t *list, key_list_node_t *node) 
 {
     if (node == list->header) {
         list->header = node->next;
@@ -88,14 +88,14 @@ static int key_list_remove_node(key_list_t *list,key_list_node_t *node)
     return 0;
 }
 
-int key_list_find_key(key_list_t *list,key_t key) 
+int key_list_find_key(key_list_t *list, key_t key) 
 {
     return key_list_get_node(list,key) != NULL;
 }
 
-int key_list_add(key_list_t *list,key_t key,value_t value)
+int key_list_add(key_list_t *list, key_t key, value_t value)
 {
-    if (key_list_find_key(list,key)) {
+    if (key_list_find_key(list, key)) {
         return -1;
     }
 
@@ -119,9 +119,9 @@ int key_list_add(key_list_t *list,key_t key,value_t value)
     return 0;   
 }
 
-int key_list_get(key_list_t *list,key_t key,value_t *value) 
+int key_list_get(key_list_t *list, key_t key, value_t *value) 
 {
-    key_list_node_t* node = key_list_get_node(list,key);
+    key_list_node_t* node = key_list_get_node(list, key);
     if (node == NULL) {
         return -1;
     }
@@ -129,9 +129,9 @@ int key_list_get(key_list_t *list,key_t key,value_t *value)
     return 0;
 }
 
-int key_list_edit(key_list_t *list,key_t key,value_t value)
+int key_list_edit(key_list_t *list, key_t key, value_t value)
 {
-    key_list_node_t* node = key_list_get_node(list,key);
+    key_list_node_t* node = key_list_get_node(list, key);
     if (node == NULL) {
         return -1;
     }
@@ -139,12 +139,12 @@ int key_list_edit(key_list_t *list,key_t key,value_t value)
     return 0;
 }
 
-int key_list_delete(key_list_t *list,key_t key) 
+int key_list_delete(key_list_t *list, key_t key) 
 {
-    key_list_node_t* node = key_list_get_node(list,key);
+    key_list_node_t* node = key_list_get_node(list, key);
     if (node == NULL) {
         return -1;
     }
 
-    return key_list_remove_node(list,node);
+    return key_list_remove_node(list, node);
 }
