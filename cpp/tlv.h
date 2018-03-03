@@ -14,7 +14,7 @@
 #define _TLV_H_
 
 #include <string>
-
+using std::string;
 namespace tlv
 {
 
@@ -33,6 +33,15 @@ public:
     Tlv(int type,std::string value);
     Tlv(int type,unsigned char *value,int length);    
     Tlv(int type,const Tlv& value);
+    bool to_bool(bool&value);
+    bool to_char(char&value);
+    bool to_short(short&value);
+    bool to_int(int&value);
+    bool to_long(long&value);
+    bool to_longlong(long long&value);
+    bool to_float(float&value);
+    bool to_double(double&value);
+    bool to_string(string&value);
     ~Tlv();
 
 public:
@@ -41,6 +50,7 @@ public:
     unsigned char *GetValue() const;
 
 private:
+    bool isdigit();
     Tlv(const Tlv& c);
     Tlv &operator=(const Tlv &c);
     void Initialize(const void *value,int length);
