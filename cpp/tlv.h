@@ -21,6 +21,7 @@ namespace tlv
 class Tlv
 {
 public:
+    Tlv(int type);
     Tlv(int type, bool value);
     Tlv(int type, char value);
     Tlv(int type, short value);

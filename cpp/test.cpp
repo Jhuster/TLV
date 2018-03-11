@@ -27,15 +27,20 @@ using namespace tlv;
 #define TEST_TYPE_8 0x08
 #define TEST_TYPE_9 0x09
 #define TEST_TYPE_a 0x0a
+#define TEST_TYPE_b 0x0b
+#define TEST_TYPE_c 0x0c
+
 
 int main(int argc, char const *argv[])
 {
     TlvBox box;
+    box.PutNoValue(TEST_TYPE_b);
     box.PutBoolValue(TEST_TYPE_0, true);
     box.PutCharValue(TEST_TYPE_1, 'x');
     box.PutShortValue(TEST_TYPE_2, (short)2);
     box.PutIntValue(TEST_TYPE_3, (int)3);
     box.PutLongValue(TEST_TYPE_4, (long)4);
+    box.PutLongLongValue(TEST_TYPE_c, (long long)4);
     box.PutFloatValue(TEST_TYPE_5, (float)5.67);
     box.PutDoubleValue(TEST_TYPE_6, (double)8.91);
     box.PutStringValue(TEST_TYPE_7, (char *)"hello world !");
@@ -77,6 +82,20 @@ int main(int argc, char const *argv[])
 
     std::cout << "box Parse Success, " << parsedBox.GetSerializedBytes() << " bytes \n";
 
+    std::vector<int> tlvList;
+    int numTlvs = parsedBox.GetTLVList(tlvList);
+    std::cout <<  "box contains " << numTlvs << " TLVs: \n";
+    for (int i=0;i<numTlvs; i++)
+        std::cout << "Tlv " << std::hex << tlvList[i] << "\n";
+
+    {
+        if (!parsedBox.GetNoValue(TEST_TYPE_b)) {
+            std::cout << "GetNoValue Failed !\n";            
+            return -1;
+        }
+        std::cout << "GetNoValue Success " << std::endl;
+    }
+    
     {
         bool value;
         if (!parsedBox.GetBoolValue(TEST_TYPE_0, value)) {
@@ -123,12 +142,21 @@ int main(int argc, char const *argv[])
     }
 
     {
-        float value;
-        if (!parsedBox.GetFloatValue(TEST_TYPE_5, value)) {
-            std::cout << "PutFloatValue Failed !\n";            
+        long long value;
+        if (!parsedBox.GetLongLongValue(TEST_TYPE_c, value)) {
+            std::cout << "GetLongLongValue Failed !\n";            
             return -1;
         }
-        std::cout << "PutFloatValue Success " << value << std::endl;
+        std::cout << "GetLongLongValue Success " << value << std::endl;
+    }
+    
+    {
+        float value;
+        if (!parsedBox.GetFloatValue(TEST_TYPE_5, value)) {
+            std::cout << "GetFloatValue Failed !\n";            
+            return -1;
+        }
+        std::cout << "GetFloatValue Success " << value << std::endl;
     }
 
     {
