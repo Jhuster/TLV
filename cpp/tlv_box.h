@@ -14,6 +14,7 @@
 #define _TLV_BOX_H_
 
 #include <map>
+#include <vector>
 #include <string>
 
 namespace tlv
@@ -33,6 +34,7 @@ private:
 
 public:
     //put one TLV object
+    bool PutNoValue(int type);
     bool PutBoolValue(int type, bool value);
     bool PutCharValue(int type, char value);
     bool PutShortValue(int type, short value);
@@ -52,12 +54,16 @@ public:
     //access encoded buffer and length
     unsigned char * GetSerializedBuffer() const;
     int GetSerializedBytes() const;
+    
+    //returns number of TLVs in TlvBox, along with a vector of the types
+    int GetTLVList(std::vector<int> &list) const;
 
 public:    
     //do decode
     bool Parse(const unsigned char *buffer, int buffersize); 
 
     //get one TLV object
+    bool GetNoValue(int type) const;
     bool GetBoolValue(int type, bool &value) const;
     bool GetCharValue(int type, char &value) const;
     bool GetShortValue(int type, short &value) const;

@@ -16,6 +16,11 @@
 namespace tlv
 {
 
+Tlv::Tlv(int type) : mType(type)
+{
+    Initialize(0, 0);
+}
+
 Tlv::Tlv(int type, bool value) : mType(type)
 {
     Initialize(&value, sizeof(bool));
