@@ -11,11 +11,17 @@
  *  or (at your option) any later version.
  */
 #include <string.h>
+#if (defined _WIN32) || (defined _WIN64)
+#include <Winsock2.h>
+#else
 #include <arpa/inet.h>
-
+#endif //windows
 #include "tlv.h"
 #include "tlv_box.h"
 
+#if (defined _WIN32) || (defined _WIN64)
+#pragma comment(lib, "wsock32.lib")
+#endif //windows
 
 static float swapFloat( float f )  //assumes sender & receiver use same float format, such as IEEE-754
 {
