@@ -16,7 +16,8 @@ g++ -o test test.cpp tlv_box.cpp tlv.cpp
 ~~~
 
 - Windows
-    Pls Open `VS20xx Native Tools Command Prompt` to build
+
+Pls Open `VS20xx Native Tools Command Prompt` to build
 
 ~~~
 cl test.cpp tlv_box.cpp tlv.cpp
