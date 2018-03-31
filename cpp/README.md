@@ -8,8 +8,20 @@ It can help you construct & parse one or several TLV objects.
 Building
 ----------
 
-    g++ -o test test.cpp tlv_box.cpp tlv.cpp
-    ./test
+- Linux/Mac
+
+~~~
+g++ -o test test.cpp tlv_box.cpp tlv.cpp
+./test
+~~~
+
+- Windows
+    Pls Open `VS20xx Native Tools Command Prompt` to build
+
+~~~
+cl test.cpp tlv_box.cpp tlv.cpp
+test.exe
+~~~
 
 Usage
 ----------
@@ -38,7 +50,7 @@ Usage
     int GetSerializedBytes() const;
 
  **2. Public functions for decode**
- 
+
     //do decode
     bool Parse(const unsigned char *buffer,int buffersize); 
     
@@ -58,7 +70,7 @@ Usage
     bool GetObjectValue(int type, TlvBox& value) const;
 
  **3. Sample code**
- 
+
      Please refer to Test.cpp.
 
 Contact
