@@ -8,7 +8,7 @@ It can help you construct & parse one or several TLV objects.
 Building
 ----------
 
-- Linux
+- Linux/Mac
 
 ~~~
 g++ -o test test.cpp tlv_box.cpp tlv.cpp
@@ -16,7 +16,7 @@ g++ -o test test.cpp tlv_box.cpp tlv.cpp
 ~~~
 
 - Windows
-    Open `VS20XX Native Tools COmmand Prompt` to build
+    Pls Open `VS20xx Native Tools Command Prompt` to build
 
 ~~~
 cl test.cpp tlv_box.cpp tlv.cpp
