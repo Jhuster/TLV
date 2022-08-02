@@ -103,9 +103,19 @@ int tlv_box_put_char(tlv_box_t *box, int type, char value)
     return tlv_box_putobject(box, type, &value, sizeof(char));
 }
 
+int tlv_box_put_uchar(tlv_box_t *box, int type, unsigned char value)
+{
+    return tlv_box_putobject(box, type, &value, sizeof(unsigned char));
+}
+
 int tlv_box_put_short(tlv_box_t *box, int type, short value)
 {
     return tlv_box_putobject(box, type, &value, sizeof(short));
+}
+
+int tlv_box_put_ushort(tlv_box_t *box, int type, unsigned short value)
+{
+    return tlv_box_putobject(box, type, &value, sizeof(unsigned short));
 }
 
 int tlv_box_put_int(tlv_box_t *box, int type, int value)
@@ -113,9 +123,19 @@ int tlv_box_put_int(tlv_box_t *box, int type, int value)
     return tlv_box_putobject(box, type, &value, sizeof(int));
 }
 
+int tlv_box_put_uint(tlv_box_t *box, int type, unsigned int value)
+{
+    return tlv_box_putobject(box, type, &value, sizeof(unsigned int));
+}
+
 int tlv_box_put_long(tlv_box_t *box, int type, long value)
 {
     return tlv_box_putobject(box, type, &value, sizeof(long));
+}
+
+int tlv_box_put_ulong(tlv_box_t *box, int type, unsigned long value)
+{
+    return tlv_box_putobject(box, type, &value, sizeof(unsigned long));
 }
 
 int tlv_box_put_longlong(tlv_box_t *box, int type, long long value)
@@ -182,6 +202,17 @@ int tlv_box_get_char(tlv_box_t *box, int type, char *value)
     return 0;
 }
 
+int tlv_box_get_uchar(tlv_box_t *box, int type, unsigned char *value)
+{
+    value_t object;
+    if (key_list_get(box->m_list, type, &object) != 0) {
+        return -1;
+    }
+    tlv_t *tlv = (tlv_t *) object.value;
+    *value = (*(unsigned char *)(tlv->value));
+    return 0;
+}
+
 int tlv_box_get_short(tlv_box_t *box, int type, short *value)
 {
     value_t object;
@@ -190,6 +221,17 @@ int tlv_box_get_short(tlv_box_t *box, int type, short *value)
     }
     tlv_t *tlv = (tlv_t *) object.value;
     *value = (*(short *)(tlv->value));
+    return 0;
+}
+
+int tlv_box_get_ushort(tlv_box_t *box, int type, unsigned short *value)
+{
+    value_t object;
+    if (key_list_get(box->m_list, type, &object) != 0) {
+        return -1;
+    }
+    tlv_t *tlv = (tlv_t *) object.value;
+    *value = (*(unsigned short *)(tlv->value));
     return 0;
 }
 
@@ -204,6 +246,17 @@ int tlv_box_get_int(tlv_box_t *box, int type, int *value)
     return 0;
 }
 
+int tlv_box_get_uint(tlv_box_t *box, int type, unsigned int *value)
+{
+    value_t object;
+    if (key_list_get(box->m_list, type, &object) != 0) {
+        return -1;
+    }
+    tlv_t *tlv = (tlv_t *) object.value;
+    *value = (*(unsigned int *)(tlv->value));
+    return 0;
+}
+
 int tlv_box_get_long(tlv_box_t *box, int type, long *value)
 {
     value_t object;
@@ -212,6 +265,17 @@ int tlv_box_get_long(tlv_box_t *box, int type, long *value)
     }
     tlv_t *tlv = (tlv_t *) object.value;
     *value = (*(long *)(tlv->value));
+    return 0;
+}
+
+int tlv_box_get_ulong(tlv_box_t *box, int type, unsigned long *value)
+{
+    value_t object;
+    if (key_list_get(box->m_list, type, &object) != 0) {
+        return -1;
+    }
+    tlv_t *tlv = (tlv_t *) object.value;
+    *value = (*(unsigned long *)(tlv->value));
     return 0;
 }
 
@@ -291,3 +355,4 @@ int tlv_box_get_object(tlv_box_t *box, int type, tlv_box_t **object)
     *object = (tlv_box_t *)tlv_box_parse(tlv->value, tlv->length);
     return 0;
 }
+

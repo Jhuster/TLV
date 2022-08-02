@@ -35,9 +35,13 @@ unsigned char *tlv_box_get_buffer(tlv_box_t *box);
 int tlv_box_get_size(tlv_box_t *box);
 
 int tlv_box_put_char(tlv_box_t *box,int type,char value);
+int tlv_box_put_uchar(tlv_box_t *box,int type,unsigned char value);
 int tlv_box_put_short(tlv_box_t *box,int type,short value);
+int tlv_box_put_ushort(tlv_box_t *box,int type,unsigned short value);
 int tlv_box_put_int(tlv_box_t *box,int type,int value);
+int tlv_box_put_uint(tlv_box_t *box,int type,unsigned int value);
 int tlv_box_put_long(tlv_box_t *box,int type,long value);
+int tlv_box_put_ulong(tlv_box_t *box,int type,unsigned long value);
 int tlv_box_put_longlong(tlv_box_t *box,int type,long long value);
 int tlv_box_put_float(tlv_box_t *box,int type,float value);
 int tlv_box_put_double(tlv_box_t *box,int type,double value);
@@ -47,9 +51,13 @@ int tlv_box_put_object(tlv_box_t *box,int type,tlv_box_t *object);
 int tlv_box_serialize(tlv_box_t *box);
 
 int tlv_box_get_char(tlv_box_t *box,int type,char *value);
+int tlv_box_get_uchar(tlv_box_t *box,int type,unsigned char *value);
 int tlv_box_get_short(tlv_box_t *box,int type,short *value);
+int tlv_box_get_ushort(tlv_box_t *box,int type,unsigned short *value);
 int tlv_box_get_int(tlv_box_t *box,int type,int *value);
+int tlv_box_get_uint(tlv_box_t *box,int type,unsigned int *value);
 int tlv_box_get_long(tlv_box_t *box,int type,long *value);
+int tlv_box_get_ulong(tlv_box_t *box,int type,unsigned long *value);
 int tlv_box_get_longlong(tlv_box_t *box,int type,long long *value);
 int tlv_box_get_float(tlv_box_t *box,int type,float *value);
 int tlv_box_get_double(tlv_box_t *box,int type,double *value);
