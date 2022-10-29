@@ -89,6 +89,12 @@ Tlv::~Tlv()
 void Tlv::Initialize(const void *value, int length)
 {
     mLength = length;
+    if(value == nullptr)
+    {
+        mValue = nullptr;
+        return;
+    }
+
     mValue = new unsigned char[length];
     memcpy(mValue, value, length);
 }
