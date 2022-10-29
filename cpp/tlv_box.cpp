@@ -90,7 +90,8 @@ bool TlvBox::Serialize()
         int nwlength = htonl(length);
         memcpy(mSerializedBuffer+offset, &nwlength, sizeof(int));
         offset += sizeof(int);
-        memcpy(mSerializedBuffer+offset, itor->second->GetValue(), length);        
+        if(length)
+            memcpy(mSerializedBuffer+offset, itor->second->GetValue(), length);
         offset += length;
     }
 
